@@ -15,7 +15,6 @@ def predict_conditions(docx):
     results = pipe_lr.predict([docx])
     return results[0]
 
-
 def get_prediction_proba(docx):
     results = pipe_lr.predict_proba([docx])
     return results
@@ -44,7 +43,7 @@ def home():
         proba_df_clean = proba_df.T.reset_index()
         proba_df_clean.columns = ["conditions", "probability"]
 
-        # Max probability for confidence
+        # Probability for confidence
 
         confidence = np.max(probability)
 
@@ -58,7 +57,7 @@ def home():
             proba_df_clean=proba_df_clean.to_dict(orient='records')  # Pass probabilities to the template
         )
 
-    # If it's a GET request, just render the empty form
+    # If it's a GET request, then it'll just render the empty form
 
     return render_template('index.html')
 
@@ -66,3 +65,4 @@ def home():
 
 if __name__ == '__main__':
     app.run(debug=True)
+    
