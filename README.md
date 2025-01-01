@@ -1,2 +1,2 @@
 # ML
-Machine learning projects 
+Machine learning project on mental health detection 
