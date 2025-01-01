@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mental Health Detection</title>
+    
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <!-- Vega and Vega-Lite Scripts for Data Visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/vega@5.21.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5.1.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6.21.0"></script>
+</head>
+<body>
+    <style>
+        h1 {
+            text-shadow: 0 0 3px white, 0 0 5px white;
+            font-size: 40px;
+        }
+    </style>
+    <h1>SENTIMENT ANALYSIS</h1>
+    <p style="text-align: center;">Detect Mental Health Conditions from text input below:</p>
+
+    <form method="POST" style="text-align: center;">
+        <textarea name="raw_text" rows="8" cols="50" placeholder="Type your text here..." required>{{ raw_text }}</textarea><br><br>
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if prediction %}
+    <div class="container">
+        <div class="column">
+            <div class="result-box">
+                <h3>Original Text</h3>
+                <p>{{ raw_text }}</p>
+            </div>
+            <div class="result-box">
+                <h3>Prediction</h3>
+                <p><strong>{{ prediction }}</strong></p>
+                <p><strong>Confidence:</strong> {{ confidence }}</p>
+            </div>
+        </div>
+        <div class="column">
+            <div class="result-box">
+                <h3>Prediction Probability</h3>
+                <div id="chart"></div>
+                <script>
+                    var data = {{ proba_df_clean | tojson }};
+                    var chartData = data.map(function(d) { return { condition: d.conditions, probability: d.probability }; });
+
+                    var vegaSpec = {
+                        "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+                        "data": { "values": chartData },
+                        "mark": "bar",
+                        "encoding": {
+                            "x": {"field": "condition", "type": "nominal", "axis": {"title": "Conditions"}},
+                            "y": {"field": "probability", "type": "quantitative", "axis": {"title": "Probability"}},
+                            "color": {"field": "condition", "type": "nominal"}
+                        }
+                    };
+
+                    vegaEmbed('#chart', vegaSpec);
+                </script>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+</body>
+</html>
