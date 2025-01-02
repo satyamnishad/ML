@@ -7,7 +7,7 @@ import json
 
 # Load the pre-trained model
 
-pipe_lr = joblib.load(open("model/mental_health_rf.pkl", "rb"))
+pipe_lr = joblib.load(open("model/mental_health_lr.pkl", "rb"))
 
 # Define prediction functions
 
